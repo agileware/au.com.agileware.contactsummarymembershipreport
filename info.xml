@@ -23,5 +23,9 @@
   </compatibility>
   <civix>
     <namespace>CRM/Contactsummarymembershipreport</namespace>
+    <format>22.05.2</format>
   </civix>
+  <mixins>
+    <mixin>mgd-php@1.0.0</mixin>
+  </mixins>
 </extension>
