@@ -220,7 +220,7 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
 
             $alias = "{$tableName}_{$fieldName}";
             $select[] = "{$field['dbAlias']} as {$alias}";
-            $this->_columnHeaders["{$tableName}_{$fieldName}"]['type'] = CRM_Utils_Array::value('type', $field);
+            $this->_columnHeaders["{$tableName}_{$fieldName}"]['type'] = $field['type'] ?? NULL;
             $this->_columnHeaders["{$tableName}_{$fieldName}"]['title'] = $field['title'];
             $this->_selectAliases[] = $alias;
           }
