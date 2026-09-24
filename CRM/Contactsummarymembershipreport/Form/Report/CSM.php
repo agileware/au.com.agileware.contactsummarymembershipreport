@@ -52,7 +52,7 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
   /**
    */
   public function __construct() {
-    $this->_autoIncludeIndexedFieldsAsOrderBys = 1;
+    $this->_autoIncludeIndexedFieldsAsOrderBys = 0;
     $this->_columns = [
       'civicrm_contact' => [
         'dao' => 'CRM_Contact_DAO_Contact',
@@ -126,40 +126,9 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
             'default_weight' => '0',
             'default_order' => 'ASC',
           ],
-          'first_name' => [
-            'name' => 'first_name',
-            'title' => ts('First Name'),
-          ],
           'gender_id' => [
             'name' => 'gender_id',
             'title' => ts('Gender'),
-          ],
-          'birth_date' => [
-            'name' => 'birth_date',
-            'title' => ts('Birth Date'),
-          ],
-          'contact_type' => [
-            'title' => ts('Contact Type'),
-          ],
-          'contact_sub_type' => [
-            'title' => ts('Contact Subtype'),
-          ],
-        ],
-      ],
-      'civicrm_membership' => [
-        'dao' => 'CRM_Member_DAO_Membership',
-        'fields' => [
-          'membership_type_id' => [
-            'title' => ts('Membership Type'),
-            'no_repeat' => TRUE,
-          ],
-        ],
-        'filters' => [
-          'membership_type_id' => [
-            'title' => ts('Membership Type'),
-            'type' => CRM_Utils_Type::T_INT,
-            'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-            'options' => CRM_Member_PseudoConstant::membershipType(),
           ],
         ],
       ],
@@ -172,11 +141,6 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
           ],
         ],
         'grouping' => 'contact-fields',
-        'order_bys' => [
-          'email' => [
-            'title' => ts('Email'),
-          ],
-        ],
       ],
       'civicrm_phone' => [
         'dao' => 'CRM_Core_DAO_Phone',
@@ -188,7 +152,127 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
         ],
         'grouping' => 'contact-fields',
       ],
-    ] + $this->getAddressColumns(['group_by' => FALSE]);
+    ];
+
+    $addressColumns = $this->getAddressColumns(['group_by' => FALSE, 'order_bys' => FALSE]);
+    $addressColumns['civicrm_address']['order_bys'] = [
+      'address_country_id' => [
+        'name' => 'country_id',
+        'title' => ts('Country'),
+        'type' => CRM_Utils_Type::T_INT,
+      ],
+      'address_state_province_id' => [
+        'name' => 'state_province_id',
+        'title' => ts('State/Territory'),
+        'type' => CRM_Utils_Type::T_INT,
+      ],
+    ];
+
+    $this->_columns = $this->_columns + $addressColumns + [
+      'civicrm_membership' => [
+        'dao' => 'CRM_Member_DAO_Membership',
+        'grouping' => 'member-fields',
+        'group_title' => ts('Memberships'),
+        'fields' => [
+          'membership_type_id' => [
+            'title' => ts('Membership Type'),
+            'no_repeat' => TRUE,
+          ],
+          'status_id' => [
+            'title' => ts('Membership Status'),
+          ],
+          'join_date' => [
+            'title' => ts('Member Since'),
+          ],
+          'start_date' => [
+            'title' => ts('Membership Start Date'),
+          ],
+          'end_date' => [
+            'title' => ts('Membership Expiration Date'),
+          ],
+          'membership_source' => [
+            'name' => 'source',
+            'title' => ts('Membership Source'),
+          ],
+          'owner_membership_id' => [
+            'title' => ts('Primary Member'),
+          ],
+          'is_override' => [
+            'title' => ts('Status Override'),
+          ],
+          'status_override_end_date' => [
+            'title' => ts('Status Override End Date'),
+          ],
+        ],
+        'filters' => [
+          'membership_type_id' => [
+            'title' => ts('Membership Type'),
+            'type' => CRM_Utils_Type::T_INT,
+            'operatorType' => CRM_Report_Form::OP_MULTISELECT,
+            'options' => CRM_Member_PseudoConstant::membershipType(),
+          ],
+          'status_id' => [
+            'title' => ts('Membership Status'),
+            'type' => CRM_Utils_Type::T_INT,
+            'operatorType' => CRM_Report_Form::OP_MULTISELECT,
+            'options' => CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label'),
+          ],
+          'join_date' => [
+            'title' => ts('Member Since'),
+            'operatorType' => CRM_Report_Form::OP_DATE,
+          ],
+          'start_date' => [
+            'title' => ts('Membership Start Date'),
+            'operatorType' => CRM_Report_Form::OP_DATE,
+          ],
+          'end_date' => [
+            'title' => ts('Membership Expiration Date'),
+            'operatorType' => CRM_Report_Form::OP_DATE,
+          ],
+          'membership_source' => [
+            'name' => 'source',
+            'title' => ts('Membership Source'),
+            'type' => CRM_Utils_Type::T_STRING,
+          ],
+          'owner_membership_id' => [
+            'title' => ts('Primary Member'),
+            'type' => CRM_Utils_Type::T_INT,
+            'operatorType' => CRM_Report_Form::OP_INT,
+          ],
+          'is_override' => [
+            'title' => ts('Status Override'),
+            'type' => CRM_Utils_Type::T_BOOLEAN,
+          ],
+          'status_override_end_date' => [
+            'title' => ts('Status Override End Date'),
+            'operatorType' => CRM_Report_Form::OP_DATE,
+          ],
+        ],
+        'order_bys' => [
+          'membership_type_id' => [
+            'name' => 'membership_type_id',
+            'title' => ts('Membership Type'),
+            'type' => CRM_Utils_Type::T_INT,
+          ],
+          'status_id' => [
+            'name' => 'status_id',
+            'title' => ts('Membership Status'),
+            'type' => CRM_Utils_Type::T_INT,
+          ],
+        ],
+      ],
+      'civicrm_membership_status' => [
+        'dao' => 'CRM_Member_DAO_MembershipStatus',
+        'grouping' => 'member-fields',
+        'group_title' => ts('Memberships'),
+        'filters' => [
+          'is_current_member' => [
+            'title' => ts('Is Current Member'),
+            'type' => CRM_Utils_Type::T_BOOLEAN,
+          ],
+        ],
+      ],
+    ];
 
     $this->_groupFilter = TRUE;
     $this->_tagFilter = TRUE;
@@ -273,6 +357,12 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
                    ON {$this->_aliases['civicrm_address']}.country_id = {$this->_aliases['civicrm_country']}.id AND
                       {$this->_aliases['civicrm_address']}.is_primary = 1 ";
     }
+
+    if ($this->isTableSelected('civicrm_membership_status')) {
+      $this->_from .= "
+            LEFT JOIN civicrm_membership_status {$this->_aliases['civicrm_membership_status']}
+                   ON {$this->_aliases['civicrm_membership']}.status_id = {$this->_aliases['civicrm_membership_status']}.id ";
+    }
   }
 
   public function postProcess() {
@@ -293,6 +383,69 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
   }
 
   /**
+   * Build array of section totals for multi-level Section Headers.
+   *
+   * This duplicates CRM_Report_Form::sectionTotals(), which never
+   * increments the loop counter used to detect the lowest-level section
+   * alias. That means every alias - not just the higher-level ones - takes
+   * the "roll count into total" branch below, reading $totals[$key] before
+   * it has been initialised for that key and triggering an "Undefined
+   * array key" warning under PHP 8.1+ whenever two or more columns are
+   * used as Section Headers at once. The running total ends up correct
+   * either way (each key is only encountered once, since the query is
+   * grouped by all section aliases), so the only fix needed here is to
+   * default a missing total to 0 instead of reading it unset.
+   */
+  public function sectionTotals() {
+    if (empty($this->_selectAliases)) {
+      return;
+    }
+
+    if (!empty($this->_sections)) {
+      $select = str_ireplace('SELECT SQL_CALC_FOUND_ROWS ', 'SELECT ', $this->_select);
+      $sql = "{$select} {$this->_from} {$this->_where} {$this->_groupBy} {$this->_having} {$this->_orderBy}";
+
+      $sectionAliases = array_keys($this->_sections);
+
+      $ifnulls = [];
+      foreach (array_merge($sectionAliases, $this->_selectAliases) as $alias) {
+        $ifnulls[] = "ifnull($alias, '') as $alias";
+      }
+      $this->_select = "SELECT " . implode(", ", $ifnulls);
+      $this->_select = CRM_Contact_BAO_Query::appendAnyValueToSelect($ifnulls, $sectionAliases);
+
+      $query = $this->_select .
+        ", count(*) as ct from ($sql) as subquery group by " .
+        implode(", ", $sectionAliases);
+
+      $totals = [];
+      $dao = CRM_Core_DAO::executeQuery($query);
+      while ($dao->fetch()) {
+        $rows[0] = $dao->toArray();
+        $this->alterDisplay($rows);
+        $this->alterCustomDataDisplay($rows);
+        $row = $rows[0];
+
+        $values = [];
+        $i = 1;
+        $aliasCount = count($sectionAliases);
+        foreach ($sectionAliases as $alias) {
+          $values[] = $row[$alias];
+          $key = implode(CRM_Core_DAO::VALUE_SEPARATOR, $values);
+          if ($i == $aliasCount) {
+            $totals[$key] = $dao->ct;
+          }
+          else {
+            $totals[$key] = ($totals[$key] ?? 0) + $dao->ct;
+          }
+          $i++;
+        }
+      }
+      $this->assign('sectionTotals', $totals);
+    }
+  }
+
+  /**
    * @param $rows
    *
    * @return bool
@@ -303,9 +456,10 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
     }
 
     $value = $row[$rowId];
-    if ($value) {
-      $rows[$rowNum][$rowId] = $types[$value];
-    }
+    // Always assign an explicit value (rather than leaving it null) so that
+    // section headers/totals (which compare/key on this value) behave
+    // consistently for rows with no value set.
+    $rows[$rowNum][$rowId] = $value ? $types[$value] : '';
     $entryFound = TRUE;
   }
 
@@ -338,27 +492,71 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
         $entryFound = TRUE;
       }
 
-      if (array_key_exists('civicrm_address_state_province_id', $row)) {
-        if ($value = $row['civicrm_address_state_province_id']) {
-          $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
+      if (array_key_exists('civicrm_address_address_state_province_id', $row)) {
+        $value = $row['civicrm_address_address_state_province_id'];
+        // Core's generic alter_display mechanism (getAddressColumns()'s
+        // 'alter_display' => 'alterStateProvinceID') already converts this
+        // to a name on the main results path before this method runs, so
+        // only convert when we still have a raw numeric id - which is the
+        // case when CRM_Report_Form::sectionTotals() calls this method
+        // directly on its own freshly-queried, unconverted rows.
+        if (is_numeric($value)) {
+          $rows[$rowNum]['civicrm_address_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
+        }
+        elseif ($value === NULL) {
+          $rows[$rowNum]['civicrm_address_address_state_province_id'] = '';
         }
         $entryFound = TRUE;
       }
 
       if (array_key_exists('civicrm_membership_membership_type_id', $row)) {
-        if ($value = $row['civicrm_membership_membership_type_id']) {
+        $value = $row['civicrm_membership_membership_type_id'];
+        if ($value) {
           $value = explode(',', $value);
           foreach ($value as $key => $id) {
             $value[$key] = CRM_Member_PseudoConstant::membershipType($id, FALSE);
           }
-          $rows[$rowNum]['civicrm_membership_membership_type_id'] = implode(' , ', $value);
+          $value = implode(' , ', $value);
         }
+        $rows[$rowNum]['civicrm_membership_membership_type_id'] = $value ?: '';
         $entryFound = TRUE;
       }
 
-      if (array_key_exists('civicrm_address_country_id', $row)) {
-        if ($value = $row['civicrm_address_country_id']) {
-          $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
+      if (array_key_exists('civicrm_membership_status_id', $row)) {
+        $value = $row['civicrm_membership_status_id'];
+        $rows[$rowNum]['civicrm_membership_status_id'] = $value ? CRM_Member_PseudoConstant::membershipStatus($value, NULL, 'label', FALSE) : '';
+        $entryFound = TRUE;
+      }
+
+      if (array_key_exists('civicrm_membership_owner_membership_id', $row)) {
+        $rows[$rowNum]['civicrm_membership_owner_membership_id'] = !empty($row['civicrm_membership_owner_membership_id']) ? ts('Inherited') : ts('Primary');
+        $entryFound = TRUE;
+      }
+
+      if (array_key_exists('civicrm_membership_is_override', $row)) {
+        $rows[$rowNum]['civicrm_membership_is_override'] = !empty($row['civicrm_membership_is_override']) ? ts('Yes') : ts('No');
+        $entryFound = TRUE;
+      }
+
+      // display membership dates using the site's default report date format
+      foreach (['civicrm_membership_join_date', 'civicrm_membership_start_date', 'civicrm_membership_end_date', 'civicrm_membership_status_override_end_date'] as $dateField) {
+        if (array_key_exists($dateField, $row)) {
+          if ($row[$dateField]) {
+            $rows[$rowNum][$dateField] = CRM_Utils_Date::customFormat($row[$dateField]);
+          }
+          $entryFound = TRUE;
+        }
+      }
+
+      if (array_key_exists('civicrm_address_address_country_id', $row)) {
+        $value = $row['civicrm_address_address_country_id'];
+        // See the state/province handling above for why this only converts
+        // when $value is still a raw numeric id.
+        if (is_numeric($value)) {
+          $rows[$rowNum]['civicrm_address_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
+        }
+        elseif ($value === NULL) {
+          $rows[$rowNum]['civicrm_address_address_country_id'] = '';
         }
         $entryFound = TRUE;
       }
@@ -366,11 +564,11 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
       // handle gender id
       $this->_initBasicRow($rows, $entryFound, $row, 'civicrm_contact_gender_id', $rowNum, $genders);
 
-      // display birthday in the configured custom format
+      // display birthday using the site's default report date format
       if (array_key_exists('civicrm_contact_birth_date', $row)) {
         $birthDate = $row['civicrm_contact_birth_date'];
         if ($birthDate) {
-          $rows[$rowNum]['civicrm_contact_birth_date'] = CRM_Utils_Date::customFormat($birthDate, '%Y%m%d');
+          $rows[$rowNum]['civicrm_contact_birth_date'] = CRM_Utils_Date::customFormat($birthDate);
         }
         $entryFound = TRUE;
       }
