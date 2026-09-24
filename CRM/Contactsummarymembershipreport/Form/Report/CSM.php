@@ -52,7 +52,7 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
   /**
    */
   public function __construct() {
-    $this->_autoIncludeIndexedFieldsAsOrderBys = 1;
+    $this->_autoIncludeIndexedFieldsAsOrderBys = 0;
     $this->_columns = [
       'civicrm_contact' => [
         'dao' => 'CRM_Contact_DAO_Contact',
@@ -120,29 +120,9 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
         ],
         'grouping' => 'contact-fields',
         'order_bys' => [
-          'sort_name' => [
-            'title' => ts('Last Name, First Name'),
-            'default' => '1',
-            'default_weight' => '0',
-            'default_order' => 'ASC',
-          ],
-          'first_name' => [
-            'name' => 'first_name',
-            'title' => ts('First Name'),
-          ],
           'gender_id' => [
             'name' => 'gender_id',
             'title' => ts('Gender'),
-          ],
-          'birth_date' => [
-            'name' => 'birth_date',
-            'title' => ts('Birth Date'),
-          ],
-          'contact_type' => [
-            'title' => ts('Contact Type'),
-          ],
-          'contact_sub_type' => [
-            'title' => ts('Contact Subtype'),
           ],
         ],
       ],
@@ -155,11 +135,6 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
           ],
         ],
         'grouping' => 'contact-fields',
-        'order_bys' => [
-          'email' => [
-            'title' => ts('Email'),
-          ],
-        ],
       ],
       'civicrm_phone' => [
         'dao' => 'CRM_Core_DAO_Phone',
@@ -171,7 +146,21 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
         ],
         'grouping' => 'contact-fields',
       ],
-    ] + $this->getAddressColumns(['group_by' => FALSE]) + [
+    ];
+
+    $addressColumns = $this->getAddressColumns(['group_by' => FALSE, 'order_bys' => FALSE]);
+    $addressColumns['civicrm_address']['order_bys'] = [
+      'address_country_id' => [
+        'name' => 'country_id',
+        'title' => ts('Country'),
+      ],
+      'address_state_province_id' => [
+        'name' => 'state_province_id',
+        'title' => ts('State/Territory'),
+      ],
+    ];
+
+    $this->_columns = $this->_columns + $addressColumns + [
       'civicrm_membership' => [
         'dao' => 'CRM_Member_DAO_Membership',
         'grouping' => 'member-fields',
@@ -255,6 +244,10 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
           'membership_type_id' => [
             'name' => 'membership_type_id',
             'title' => ts('Membership Type'),
+          ],
+          'status_id' => [
+            'name' => 'status_id',
+            'title' => ts('Membership Status'),
           ],
         ],
       ],
