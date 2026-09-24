@@ -460,11 +460,11 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
         $entryFound = TRUE;
       }
 
-      // display membership dates in the configured custom format
+      // display membership dates using the site's default report date format
       foreach (['civicrm_membership_join_date', 'civicrm_membership_start_date', 'civicrm_membership_end_date', 'civicrm_membership_status_override_end_date'] as $dateField) {
         if (array_key_exists($dateField, $row)) {
           if ($row[$dateField]) {
-            $rows[$rowNum][$dateField] = CRM_Utils_Date::customFormat($row[$dateField], '%Y%m%d');
+            $rows[$rowNum][$dateField] = CRM_Utils_Date::customFormat($row[$dateField]);
           }
           $entryFound = TRUE;
         }
@@ -480,11 +480,11 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
       // handle gender id
       $this->_initBasicRow($rows, $entryFound, $row, 'civicrm_contact_gender_id', $rowNum, $genders);
 
-      // display birthday in the configured custom format
+      // display birthday using the site's default report date format
       if (array_key_exists('civicrm_contact_birth_date', $row)) {
         $birthDate = $row['civicrm_contact_birth_date'];
         if ($birthDate) {
-          $rows[$rowNum]['civicrm_contact_birth_date'] = CRM_Utils_Date::customFormat($birthDate, '%Y%m%d');
+          $rows[$rowNum]['civicrm_contact_birth_date'] = CRM_Utils_Date::customFormat($birthDate);
         }
         $entryFound = TRUE;
       }
