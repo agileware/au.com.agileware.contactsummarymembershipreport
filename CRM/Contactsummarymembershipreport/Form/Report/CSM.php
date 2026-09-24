@@ -431,7 +431,18 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
 
       if (array_key_exists('civicrm_address_address_state_province_id', $row)) {
         $value = $row['civicrm_address_address_state_province_id'];
-        $rows[$rowNum]['civicrm_address_address_state_province_id'] = $value ? CRM_Core_PseudoConstant::stateProvince($value, FALSE) : '';
+        // Core's generic alter_display mechanism (getAddressColumns()'s
+        // 'alter_display' => 'alterStateProvinceID') already converts this
+        // to a name on the main results path before this method runs, so
+        // only convert when we still have a raw numeric id - which is the
+        // case when CRM_Report_Form::sectionTotals() calls this method
+        // directly on its own freshly-queried, unconverted rows.
+        if (is_numeric($value)) {
+          $rows[$rowNum]['civicrm_address_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
+        }
+        elseif ($value === NULL) {
+          $rows[$rowNum]['civicrm_address_address_state_province_id'] = '';
+        }
         $entryFound = TRUE;
       }
 
@@ -476,7 +487,14 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
 
       if (array_key_exists('civicrm_address_address_country_id', $row)) {
         $value = $row['civicrm_address_address_country_id'];
-        $rows[$rowNum]['civicrm_address_address_country_id'] = $value ? CRM_Core_PseudoConstant::country($value, FALSE) : '';
+        // See the state/province handling above for why this only converts
+        // when $value is still a raw numeric id.
+        if (is_numeric($value)) {
+          $rows[$rowNum]['civicrm_address_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
+        }
+        elseif ($value === NULL) {
+          $rows[$rowNum]['civicrm_address_address_country_id'] = '';
+        }
         $entryFound = TRUE;
       }
 
