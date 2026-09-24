@@ -146,6 +146,32 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
           ],
         ],
       ],
+      'civicrm_email' => [
+        'dao' => 'CRM_Core_DAO_Email',
+        'fields' => [
+          'email' => [
+            'title' => ts('Email'),
+            'no_repeat' => TRUE,
+          ],
+        ],
+        'grouping' => 'contact-fields',
+        'order_bys' => [
+          'email' => [
+            'title' => ts('Email'),
+          ],
+        ],
+      ],
+      'civicrm_phone' => [
+        'dao' => 'CRM_Core_DAO_Phone',
+        'fields' => [
+          'phone' => NULL,
+          'phone_ext' => [
+            'title' => ts('Phone Extension'),
+          ],
+        ],
+        'grouping' => 'contact-fields',
+      ],
+    ] + $this->getAddressColumns(['group_by' => FALSE]) + [
       'civicrm_membership' => [
         'dao' => 'CRM_Member_DAO_Membership',
         'grouping' => 'member-fields',
@@ -243,32 +269,7 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
           ],
         ],
       ],
-      'civicrm_email' => [
-        'dao' => 'CRM_Core_DAO_Email',
-        'fields' => [
-          'email' => [
-            'title' => ts('Email'),
-            'no_repeat' => TRUE,
-          ],
-        ],
-        'grouping' => 'contact-fields',
-        'order_bys' => [
-          'email' => [
-            'title' => ts('Email'),
-          ],
-        ],
-      ],
-      'civicrm_phone' => [
-        'dao' => 'CRM_Core_DAO_Phone',
-        'fields' => [
-          'phone' => NULL,
-          'phone_ext' => [
-            'title' => ts('Phone Extension'),
-          ],
-        ],
-        'grouping' => 'contact-fields',
-      ],
-    ] + $this->getAddressColumns(['group_by' => FALSE]);
+    ];
 
     $this->_groupFilter = TRUE;
     $this->_tagFilter = TRUE;
