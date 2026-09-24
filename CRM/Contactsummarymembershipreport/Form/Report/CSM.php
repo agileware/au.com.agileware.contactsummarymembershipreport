@@ -393,9 +393,10 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
     }
 
     $value = $row[$rowId];
-    if ($value) {
-      $rows[$rowNum][$rowId] = $types[$value];
-    }
+    // Always assign an explicit value (rather than leaving it null) so that
+    // section headers/totals (which compare/key on this value) behave
+    // consistently for rows with no value set.
+    $rows[$rowNum][$rowId] = $value ? $types[$value] : '';
     $entryFound = TRUE;
   }
 
@@ -428,28 +429,28 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
         $entryFound = TRUE;
       }
 
-      if (array_key_exists('civicrm_address_state_province_id', $row)) {
-        if ($value = $row['civicrm_address_state_province_id']) {
-          $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
-        }
+      if (array_key_exists('civicrm_address_address_state_province_id', $row)) {
+        $value = $row['civicrm_address_address_state_province_id'];
+        $rows[$rowNum]['civicrm_address_address_state_province_id'] = $value ? CRM_Core_PseudoConstant::stateProvince($value, FALSE) : '';
         $entryFound = TRUE;
       }
 
       if (array_key_exists('civicrm_membership_membership_type_id', $row)) {
-        if ($value = $row['civicrm_membership_membership_type_id']) {
+        $value = $row['civicrm_membership_membership_type_id'];
+        if ($value) {
           $value = explode(',', $value);
           foreach ($value as $key => $id) {
             $value[$key] = CRM_Member_PseudoConstant::membershipType($id, FALSE);
           }
-          $rows[$rowNum]['civicrm_membership_membership_type_id'] = implode(' , ', $value);
+          $value = implode(' , ', $value);
         }
+        $rows[$rowNum]['civicrm_membership_membership_type_id'] = $value ?: '';
         $entryFound = TRUE;
       }
 
       if (array_key_exists('civicrm_membership_status_id', $row)) {
-        if ($value = $row['civicrm_membership_status_id']) {
-          $rows[$rowNum]['civicrm_membership_status_id'] = CRM_Member_PseudoConstant::membershipStatus($value, NULL, 'label', FALSE);
-        }
+        $value = $row['civicrm_membership_status_id'];
+        $rows[$rowNum]['civicrm_membership_status_id'] = $value ? CRM_Member_PseudoConstant::membershipStatus($value, NULL, 'label', FALSE) : '';
         $entryFound = TRUE;
       }
 
@@ -473,10 +474,9 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
         }
       }
 
-      if (array_key_exists('civicrm_address_country_id', $row)) {
-        if ($value = $row['civicrm_address_country_id']) {
-          $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
-        }
+      if (array_key_exists('civicrm_address_address_country_id', $row)) {
+        $value = $row['civicrm_address_address_country_id'];
+        $rows[$rowNum]['civicrm_address_address_country_id'] = $value ? CRM_Core_PseudoConstant::country($value, FALSE) : '';
         $entryFound = TRUE;
       }
 
