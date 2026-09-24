@@ -148,6 +148,8 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
       ],
       'civicrm_membership' => [
         'dao' => 'CRM_Member_DAO_Membership',
+        'grouping' => 'member-fields',
+        'group_title' => ts('Memberships'),
         'fields' => [
           'membership_type_id' => [
             'title' => ts('Membership Type'),
@@ -155,6 +157,28 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
           ],
           'status_id' => [
             'title' => ts('Membership Status'),
+          ],
+          'join_date' => [
+            'title' => ts('Member Since'),
+          ],
+          'start_date' => [
+            'title' => ts('Membership Start Date'),
+          ],
+          'end_date' => [
+            'title' => ts('Membership Expiration Date'),
+          ],
+          'membership_source' => [
+            'name' => 'source',
+            'title' => ts('Membership Source'),
+          ],
+          'owner_membership_id' => [
+            'title' => ts('Primary Member'),
+          ],
+          'is_override' => [
+            'title' => ts('Status Override'),
+          ],
+          'status_override_end_date' => [
+            'title' => ts('Status Override End Date'),
           ],
         ],
         'filters' => [
@@ -170,6 +194,36 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label'),
           ],
+          'join_date' => [
+            'title' => ts('Member Since'),
+            'operatorType' => CRM_Report_Form::OP_DATE,
+          ],
+          'start_date' => [
+            'title' => ts('Membership Start Date'),
+            'operatorType' => CRM_Report_Form::OP_DATE,
+          ],
+          'end_date' => [
+            'title' => ts('Membership Expiration Date'),
+            'operatorType' => CRM_Report_Form::OP_DATE,
+          ],
+          'membership_source' => [
+            'name' => 'source',
+            'title' => ts('Membership Source'),
+            'type' => CRM_Utils_Type::T_STRING,
+          ],
+          'owner_membership_id' => [
+            'title' => ts('Primary Member'),
+            'type' => CRM_Utils_Type::T_INT,
+            'operatorType' => CRM_Report_Form::OP_INT,
+          ],
+          'is_override' => [
+            'title' => ts('Status Override'),
+            'type' => CRM_Utils_Type::T_BOOLEAN,
+          ],
+          'status_override_end_date' => [
+            'title' => ts('Status Override End Date'),
+            'operatorType' => CRM_Report_Form::OP_DATE,
+          ],
         ],
         'order_bys' => [
           'membership_type_id' => [
@@ -180,6 +234,8 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
       ],
       'civicrm_membership_status' => [
         'dao' => 'CRM_Member_DAO_MembershipStatus',
+        'grouping' => 'member-fields',
+        'group_title' => ts('Memberships'),
         'filters' => [
           'is_current_member' => [
             'title' => ts('Is Current Member'),
@@ -391,6 +447,26 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
           $rows[$rowNum]['civicrm_membership_status_id'] = CRM_Member_PseudoConstant::membershipStatus($value, NULL, 'label', FALSE);
         }
         $entryFound = TRUE;
+      }
+
+      if (array_key_exists('civicrm_membership_owner_membership_id', $row)) {
+        $rows[$rowNum]['civicrm_membership_owner_membership_id'] = !empty($row['civicrm_membership_owner_membership_id']) ? ts('Inherited') : ts('Primary');
+        $entryFound = TRUE;
+      }
+
+      if (array_key_exists('civicrm_membership_is_override', $row)) {
+        $rows[$rowNum]['civicrm_membership_is_override'] = !empty($row['civicrm_membership_is_override']) ? ts('Yes') : ts('No');
+        $entryFound = TRUE;
+      }
+
+      // display membership dates in the configured custom format
+      foreach (['civicrm_membership_join_date', 'civicrm_membership_start_date', 'civicrm_membership_end_date', 'civicrm_membership_status_override_end_date'] as $dateField) {
+        if (array_key_exists($dateField, $row)) {
+          if ($row[$dateField]) {
+            $rows[$rowNum][$dateField] = CRM_Utils_Date::customFormat($row[$dateField], '%Y%m%d');
+          }
+          $entryFound = TRUE;
+        }
       }
 
       if (array_key_exists('civicrm_address_country_id', $row)) {
