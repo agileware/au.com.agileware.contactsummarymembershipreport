@@ -120,6 +120,12 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
         ],
         'grouping' => 'contact-fields',
         'order_bys' => [
+          'sort_name' => [
+            'title' => ts('Last Name, First Name'),
+            'default' => '1',
+            'default_weight' => '0',
+            'default_order' => 'ASC',
+          ],
           'gender_id' => [
             'name' => 'gender_id',
             'title' => ts('Gender'),
