@@ -153,6 +153,9 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
             'title' => ts('Membership Type'),
             'no_repeat' => TRUE,
           ],
+          'status_id' => [
+            'title' => ts('Membership Status'),
+          ],
         ],
         'filters' => [
           'membership_type_id' => [
@@ -160,6 +163,27 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
             'type' => CRM_Utils_Type::T_INT,
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'options' => CRM_Member_PseudoConstant::membershipType(),
+          ],
+          'status_id' => [
+            'title' => ts('Membership Status'),
+            'type' => CRM_Utils_Type::T_INT,
+            'operatorType' => CRM_Report_Form::OP_MULTISELECT,
+            'options' => CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label'),
+          ],
+        ],
+        'order_bys' => [
+          'membership_type_id' => [
+            'name' => 'membership_type_id',
+            'title' => ts('Membership Type'),
+          ],
+        ],
+      ],
+      'civicrm_membership_status' => [
+        'dao' => 'CRM_Member_DAO_MembershipStatus',
+        'filters' => [
+          'is_current_member' => [
+            'title' => ts('Is Current Member'),
+            'type' => CRM_Utils_Type::T_BOOLEAN,
           ],
         ],
       ],
@@ -273,6 +297,12 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
                    ON {$this->_aliases['civicrm_address']}.country_id = {$this->_aliases['civicrm_country']}.id AND
                       {$this->_aliases['civicrm_address']}.is_primary = 1 ";
     }
+
+    if ($this->isTableSelected('civicrm_membership_status')) {
+      $this->_from .= "
+            LEFT JOIN civicrm_membership_status {$this->_aliases['civicrm_membership_status']}
+                   ON {$this->_aliases['civicrm_membership']}.status_id = {$this->_aliases['civicrm_membership_status']}.id ";
+    }
   }
 
   public function postProcess() {
@@ -352,6 +382,13 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
             $value[$key] = CRM_Member_PseudoConstant::membershipType($id, FALSE);
           }
           $rows[$rowNum]['civicrm_membership_membership_type_id'] = implode(' , ', $value);
+        }
+        $entryFound = TRUE;
+      }
+
+      if (array_key_exists('civicrm_membership_status_id', $row)) {
+        if ($value = $row['civicrm_membership_status_id']) {
+          $rows[$rowNum]['civicrm_membership_status_id'] = CRM_Member_PseudoConstant::membershipStatus($value, NULL, 'label', FALSE);
         }
         $entryFound = TRUE;
       }

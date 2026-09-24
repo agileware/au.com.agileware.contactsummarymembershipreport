@@ -18,12 +18,15 @@ your CiviCRM version). Search for "Contact Summary" or "Membership Type" to find
 The report supports the following, similar to the core Contact Summary report:
 
 * **Columns/Fields** — Contact Name, First/Middle/Last Name, Gender, Birth Date, Age, Contact
-  Type, Contact Subtype, Membership Type, Email, Phone/Phone Extension, Address fields, and any
-  custom fields configured for Contact, Individual, Household, or Organization contact
-  (sub)types.
+  Type, Contact Subtype, Membership Type, Membership Status, Email, Phone/Phone Extension,
+  Address fields, and any custom fields configured for Contact, Individual, Household, or
+  Organization contact (sub)types.
 * **Filters** — Contact Name, Contact Source, Contact ID, Gender, Birth Date, Contact Type,
-  Contact Subtype, Membership Type (multi-select), Group, and Tag, in addition to the standard
-  address and custom field filters offered by CiviCRM's report filtering.
+  Contact Subtype, Membership Type (multi-select), Membership Status (multi-select), Is Current
+  Member (yes/no), Group, and Tag, in addition to the standard address and custom field filters
+  offered by CiviCRM's report filtering.
+* **Grouping** — rows can be grouped by Membership Type using the report's Order By Columns
+  criteria (select Membership Type as an order-by column and enable it as a section header).
 * **Drilldown** — clicking a contact's name in the report results links through to that contact's
   Constituent Detail Report.
 
@@ -39,7 +42,7 @@ underlying data, such as `access CiviContribute` for membership data).
 
 ## Requirements
 
-* CiviCRM 5.82+ (the version currently declared as compatible in `info.xml`; the report may work
+* CiviCRM 6.16+ (the version currently declared as compatible in `info.xml`; the report may work
   with earlier versions but has not been verified against them)
 
 ## Installation (Web UI)
