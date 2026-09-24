@@ -159,10 +159,12 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
       'address_country_id' => [
         'name' => 'country_id',
         'title' => ts('Country'),
+        'type' => CRM_Utils_Type::T_INT,
       ],
       'address_state_province_id' => [
         'name' => 'state_province_id',
         'title' => ts('State/Territory'),
+        'type' => CRM_Utils_Type::T_INT,
       ],
     ];
 
@@ -250,10 +252,12 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
           'membership_type_id' => [
             'name' => 'membership_type_id',
             'title' => ts('Membership Type'),
+            'type' => CRM_Utils_Type::T_INT,
           ],
           'status_id' => [
             'name' => 'status_id',
             'title' => ts('Membership Status'),
+            'type' => CRM_Utils_Type::T_INT,
           ],
         ],
       ],
