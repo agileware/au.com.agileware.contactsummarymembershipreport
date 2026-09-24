@@ -383,6 +383,69 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
   }
 
   /**
+   * Build array of section totals for multi-level Section Headers.
+   *
+   * This duplicates CRM_Report_Form::sectionTotals(), which never
+   * increments the loop counter used to detect the lowest-level section
+   * alias. That means every alias - not just the higher-level ones - takes
+   * the "roll count into total" branch below, reading $totals[$key] before
+   * it has been initialised for that key and triggering an "Undefined
+   * array key" warning under PHP 8.1+ whenever two or more columns are
+   * used as Section Headers at once. The running total ends up correct
+   * either way (each key is only encountered once, since the query is
+   * grouped by all section aliases), so the only fix needed here is to
+   * default a missing total to 0 instead of reading it unset.
+   */
+  public function sectionTotals() {
+    if (empty($this->_selectAliases)) {
+      return;
+    }
+
+    if (!empty($this->_sections)) {
+      $select = str_ireplace('SELECT SQL_CALC_FOUND_ROWS ', 'SELECT ', $this->_select);
+      $sql = "{$select} {$this->_from} {$this->_where} {$this->_groupBy} {$this->_having} {$this->_orderBy}";
+
+      $sectionAliases = array_keys($this->_sections);
+
+      $ifnulls = [];
+      foreach (array_merge($sectionAliases, $this->_selectAliases) as $alias) {
+        $ifnulls[] = "ifnull($alias, '') as $alias";
+      }
+      $this->_select = "SELECT " . implode(", ", $ifnulls);
+      $this->_select = CRM_Contact_BAO_Query::appendAnyValueToSelect($ifnulls, $sectionAliases);
+
+      $query = $this->_select .
+        ", count(*) as ct from ($sql) as subquery group by " .
+        implode(", ", $sectionAliases);
+
+      $totals = [];
+      $dao = CRM_Core_DAO::executeQuery($query);
+      while ($dao->fetch()) {
+        $rows[0] = $dao->toArray();
+        $this->alterDisplay($rows);
+        $this->alterCustomDataDisplay($rows);
+        $row = $rows[0];
+
+        $values = [];
+        $i = 1;
+        $aliasCount = count($sectionAliases);
+        foreach ($sectionAliases as $alias) {
+          $values[] = $row[$alias];
+          $key = implode(CRM_Core_DAO::VALUE_SEPARATOR, $values);
+          if ($i == $aliasCount) {
+            $totals[$key] = $dao->ct;
+          }
+          else {
+            $totals[$key] = ($totals[$key] ?? 0) + $dao->ct;
+          }
+          $i++;
+        }
+      }
+      $this->assign('sectionTotals', $totals);
+    }
+  }
+
+  /**
    * @param $rows
    *
    * @return bool
