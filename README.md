@@ -20,17 +20,18 @@ The report supports the following, similar to the core Contact Summary report. O
 Contact Address fields, a **Memberships** section, then any Custom fields.
 
 * **Columns/Fields** — Contact Name, First/Middle/Last Name, Gender, Birth Date, Age, Contact
-  Type, Contact Subtype, Email, Phone/Phone Extension, Address fields, any custom fields
-  configured for Contact, Individual, Household, or Organization contact (sub)types, and, under
-  **Memberships**: Membership Type, Membership Status, Member Since, Membership Start Date,
-  Membership Expiration Date, Membership Source, Primary Member (Primary/Inherited), Status
-  Override, and Status Override End Date.
+  Type, Contact Subtype, Job Title, External ID, Email, Phone/Phone Extension, Address fields, any
+  custom fields configured for Contact, Individual, Household, or Organization contact (sub)types,
+  and, under **Memberships**: Membership Type, Membership Status, Member Since, Membership Start
+  Date, Membership Expiration Date, Membership Source, Primary Member (Primary/Inherited), Status
+  Override, and Status Override End Date. The address section's ID and Primary Address? fields
+  are omitted, since both simply reflect the primary location and add no useful information.
 * **Filters** — Contact Name, Contact Source, Contact ID, Gender, Birth Date, Contact Type,
-  Contact Subtype, Group, and Tag, in addition to the standard address and custom field filters
-  offered by CiviCRM's report filtering, plus under **Memberships**: Membership Type
-  (multi-select), Membership Status (multi-select), Is Current Member (yes/no), Member Since,
-  Membership Start Date, Membership Expiration Date, Membership Source, Primary Member,
-  Status Override (yes/no), and Status Override End Date.
+  Contact Subtype, Job Title, External ID, Group, and Tag, in addition to the standard address and
+  custom field filters offered by CiviCRM's report filtering, plus under **Memberships**:
+  Membership Type (multi-select), Membership Status (multi-select), Is Current Member (yes/no),
+  Member Since, Membership Start Date, Membership Expiration Date, Membership Source, Primary
+  Member, Status Override (yes/no), and Status Override End Date.
 * **Sorting** — the report's Order By Columns criteria is limited to Last Name/First Name
   (the default sort), Membership Status, Membership Type, Country, State/Territory, and Gender.
   Any of these can also be checked as a **Section Header / Group By** to group the results into

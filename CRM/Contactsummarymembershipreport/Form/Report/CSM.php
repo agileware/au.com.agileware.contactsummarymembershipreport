@@ -91,6 +91,12 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
           'contact_sub_type' => [
             'title' => ts('Contact Subtype'),
           ],
+          'job_title' => [
+            'title' => ts('Job Title'),
+          ],
+          'external_identifier' => [
+            'title' => ts('External ID'),
+          ],
         ],
         'filters' => [
           'sort_name' => ['title' => ts('Contact Name')],
@@ -101,6 +107,14 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
           'id' => [
             'title' => ts('Contact ID'),
             'no_display' => TRUE,
+          ],
+          'job_title' => [
+            'title' => ts('Job Title'),
+            'type' => CRM_Utils_Type::T_STRING,
+          ],
+          'external_identifier' => [
+            'title' => ts('External ID'),
+            'type' => CRM_Utils_Type::T_STRING,
           ],
           'gender_id' => [
             'title' => ts('Gender'),
@@ -155,6 +169,11 @@ class CRM_Contactsummarymembershipreport_Form_Report_CSM extends CRM_Report_Form
     ];
 
     $addressColumns = $this->getAddressColumns(['group_by' => FALSE, 'order_bys' => FALSE]);
+    // The 'ID' and 'Primary Address?' fields both refer to the primary
+    // location for the contact and aren't useful in this report, so drop
+    // them from the Columns tab.
+    unset($addressColumns['civicrm_address']['fields']['address_id']);
+    unset($addressColumns['civicrm_address']['fields']['address_is_primary']);
     $addressColumns['civicrm_address']['order_bys'] = [
       'address_country_id' => [
         'name' => 'country_id',
