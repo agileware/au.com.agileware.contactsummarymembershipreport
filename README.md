@@ -24,8 +24,7 @@ Contact Address fields, a **Memberships** section, then any Custom fields.
   custom fields configured for Contact, Individual, Household, or Organization contact (sub)types,
   and, under **Memberships**: Membership Type, Membership Status, Member Since, Membership Start
   Date, Membership Expiration Date, Membership Source, Primary Member (Primary/Inherited), Status
-  Override, and Status Override End Date. The address section's ID and Primary Address? fields
-  are omitted, since both simply reflect the primary location and add no useful information.
+  Override, and Status Override End Date.
 * **Filters** — Contact Name, Contact Source, Contact ID, Gender, Birth Date, Contact Type,
   Contact Subtype, Job Title, External ID, Group, and Tag, in addition to the standard address and
   custom field filters offered by CiviCRM's report filtering, plus under **Memberships**:
