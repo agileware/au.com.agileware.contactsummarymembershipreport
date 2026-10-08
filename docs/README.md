@@ -7,7 +7,7 @@ available to Individual, Household, and Organization contacts. This solves the p
 core Contact Summary report not exposing membership information as a column or filter, requiring
 a separate Membership report to cross-reference contacts and their memberships.
 
-The extension is licensed under [AGPL-3.0](LICENSE.txt).
+The extension is licensed under [AGPL-3.0](https://github.com/agileware/au.com.agileware.contactsummarymembershipreport/blob/master/LICENSE.txt).
 
 ## Usage
 
@@ -77,4 +77,4 @@ services including:
 Support your Australian [CiviCRM](https://civicrm.org) developers,
 [contact Agileware](https://agileware.com.au/contact) today!
 
-![Agileware](logo/agileware-logo.png)
+![Agileware](https://github.com/agileware/au.com.agileware.contactsummarymembershipreport/raw/master/docs/logo/agileware-logo.png)

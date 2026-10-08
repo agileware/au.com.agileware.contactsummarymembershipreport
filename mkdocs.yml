@@ -1,0 +1,26 @@
+site_name: Contact Summary With Membership Type Report for CiviCRM
+repo_url: https://github.com/agileware/au.com.agileware.contactsummarymembershipreport
+site_description: 'A guide for the Contact Summary With Membership Type Report CiviCRM extension.'
+site_author: 'agileware'
+theme:
+  name: material
+
+nav:
+  - 'Introduction': README.md
+
+markdown_extensions:
+  - attr_list
+  - admonition
+  - def_list
+  - codehilite
+  - toc:
+      permalink: True
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.tilde
+  - pymdownx.betterem
+  - pymdownx.mark
+
+plugins:
+  - search:
+      lang: en
